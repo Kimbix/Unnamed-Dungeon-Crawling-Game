@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Microsoft.Xna.Framework;
 
 namespace Unnamed_Dungeon_Crawling_Game;
 
 public struct WallHit {
   public Vector2 Pushout;
+  public Entity Entity;
 }
 
 public static class EntityManager {
@@ -15,6 +16,10 @@ public static class EntityManager {
   public static readonly List<Entity> EntityList = [];
   private static readonly List<Entity> _toAdd = [];
   private static readonly List<Entity> _toRemove = [];
+
+  public static List<Entity> Get<T>() where T : Entity {
+    return EntityList.Where(x => x.GetType() == typeof(T)).ToList();
+  }
 
   public static Entity Add(Entity instance) {
     _toAdd.Add(instance);
@@ -38,7 +43,7 @@ public static class EntityManager {
       // Remove all from remove list
       int removeCount = _toRemove.Count;
       for (int i = 0; i < removeCount; i++) {
-        EntityList.Remove(_toAdd[i]);
+        EntityList.Remove(_toRemove[i]);
         _toRemove[i].Removed(); // Code to execute when removed
       }
       _toRemove.RemoveRange(0, removeCount);
@@ -67,10 +72,13 @@ public static class EntityManager {
   public static List<WallHit> SolidWallCheck(in RectangleHitbox box) {
     List<WallHit> hitlist = [];
     foreach (Entity solid in EntityList) {
+      // Ignored Types
       if (solid.GetType() == typeof(Player)) { continue; }
+
       if (solid.BoundBox.Intersects(box)) {
         WallHit hit;
         hit.Pushout = box.Center - solid.BoundBox.Center;
+        hit.Entity = solid;
         hitlist.Add(hit);
       }
     }

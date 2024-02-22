@@ -22,6 +22,7 @@ public class Game1 : Game {
   // TODO: REMOVE LATER
   public RoomLayout testLayout;
   public Floor testFloor;
+  //
 
   public Game1() {
     _graphics = new GraphicsDeviceManager(this);
@@ -64,8 +65,12 @@ public class Game1 : Game {
     }
     testFloor.CreateRoom(testLayout);
 
+    var enemy = EntityManager.Add(new TestEnemy());
+    enemy.Position = new Vector2(300, 300);
+    enemy.Texture = Globals.Content.Load<Texture2D>(
+        "Assets/Sprites/Entities/Enemies/TestEnemy");
     var player = EntityManager.Add(new Player());
-    player.Position = new Vector2(300, 300);
+    player.Position = new Vector2(300, 400);
     player.Texture = Globals.Content.Load<Texture2D>("GameObstacles/TestRock");
   }
 

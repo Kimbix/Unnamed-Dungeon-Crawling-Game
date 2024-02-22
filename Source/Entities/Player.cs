@@ -62,14 +62,21 @@ public class Player : Entity {
   }
 
   public void Popout() {
+    // TODO: Collisions work mostly fine, but could use some refinement
     List<WallHit> hitlist = EntityManager.SolidWallCheck(BoundBox);
     foreach (WallHit hit in hitlist) {
-      if (hit.Pushout != Vector2.Zero && Math.Abs(hit.Pushout.X) >= Math.Abs(hit.Pushout.Y)) {
-        Position.X += Math.Sign(hit.Pushout.X) * Math.Abs((Math.Abs(hit.Pushout.X) - Math.Abs(BoundBox.Size.X)));
+      if (hit.Pushout != Vector2.Zero &&
+          Math.Abs(hit.Pushout.X) > Math.Abs(hit.Pushout.Y)) {
+        Position.X +=
+            Math.Sign(hit.Pushout.X) *
+            Math.Abs((Math.Abs(hit.Pushout.X) - Math.Abs(BoundBox.Size.X)));
         velocity.X = 0;
       }
-      if (hit.Pushout != Vector2.Zero && Math.Abs(hit.Pushout.X) <= Math.Abs(hit.Pushout.Y)) {
-        Position.Y += Math.Sign(hit.Pushout.Y) * Math.Abs((Math.Abs(hit.Pushout.Y) - Math.Abs(BoundBox.Size.Y)));
+      if (hit.Pushout != Vector2.Zero &&
+          Math.Abs(hit.Pushout.X) < Math.Abs(hit.Pushout.Y)) {
+        Position.Y +=
+            Math.Sign(hit.Pushout.Y) *
+            Math.Abs((Math.Abs(hit.Pushout.Y) - Math.Abs(BoundBox.Size.Y)));
         velocity.Y = 0;
       }
     }
